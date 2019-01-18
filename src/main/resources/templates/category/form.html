@@ -5,7 +5,7 @@
 <div th:replace="layout :: nav"></div>
 <div th:replace="layout :: flash"></div>
 <div class="container">
-    <form>
+    <form th:action="@{/categories}" method="post">
         <div class="row">
             <div class="col s12">
                 <h2>New Category</h2>

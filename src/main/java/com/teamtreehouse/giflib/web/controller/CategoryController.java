@@ -1,6 +1,10 @@
 package com.teamtreehouse.giflib.web.controller;
 
 import com.teamtreehouse.giflib.model.Category;
+import com.teamtreehouse.giflib.service.CategoryService;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,11 +17,17 @@ import java.util.List;
 @Controller
 public class CategoryController {
 
+    @Autowired
+    private CategoryService categoryService;
+
     // Index of all categories
+    @SuppressWarnings("unchecked")
     @RequestMapping("/categories")
     public String listCategories(Model model) {
         // TODO: Get all categories
-        List<Category> categories = new ArrayList<>();
+
+        //creates unchecked assignment warning. must SuppressWarnings above.
+        List<Category> categories = categoryService.findAll();
 
         model.addAttribute("categories",categories);
         return "category/index";
@@ -60,11 +70,11 @@ public class CategoryController {
 
     // Add a category
     @RequestMapping(value = "/categories", method = RequestMethod.POST)
-    public String addCategory() {
+    public String addCategory(Category category) {
         // TODO: Add category if valid data was received
-
+        categoryService.save(category);
         // TODO: Redirect browser to /categories
-        return null;
+        return "redirect:/categories";
     }
 
     // Delete an existing category

@@ -1,12 +1,22 @@
 package com.teamtreehouse.giflib.model;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
+@Entity
 public class Gif {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Lob
     private byte[] bytes;
     private String description;
+
+    //Many Gifs can be in one category
+    @ManyToOne
     private Category category;
     private LocalDateTime dateUploaded = LocalDateTime.now();
     private String username = "You";
