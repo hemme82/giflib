@@ -52,6 +52,7 @@
     </div>
 </div>
 
+<!--if an attribute named flash is not null, it will display-->
 <div th:fragment="flash" th:if="${flash != null}" class="container">
     <i class="right material-icons" data-close="">close</i>
     <div th:classappend="${#strings.toLowerCase(flash.status)}" th:text="${flash.message}" class="flash"></div>

@@ -1,6 +1,9 @@
 package com.teamtreehouse.giflib.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +13,13 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     //when @Id is used, no need for @Column for other fields
     private Long id;
+
+    @NotNull
+    @Size(min = 3, max = 12)
     private String name;
+
+    @NotNull
+    @Pattern(regexp = "#[0-9a-fA-f]{6}")//match a hexcode.
     private String colorCode;
 
     //one category can have many gifs.
