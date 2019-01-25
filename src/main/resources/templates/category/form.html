@@ -7,10 +7,11 @@
 <div class="container">
     <!-- object = "${category}" is from model.attribute in CategoryController formNewCategory
     method-->
-    <form th:action="@{/categories}" method="post" th:object="${category}">
+    <form th:action="@{${action}}" method="post" th:object="${category}">
+        <input type="hidden" th:field="*{id}"/>
         <div class="row">
             <div class="col s12">
-                <h2>New Category</h2>
+                <h2 th:text="${heading}">New Category</h2>
             </div>
         </div>
         <div class="divider"></div>
@@ -38,7 +39,7 @@
         </div>
         <div class="row">
             <div class="col s12 l8">
-                <button type="submit" class="button">Add</button>
+                <button th:text="${submit}" type="submit" class="button">Add</button>
                 <a th:href="@{/categories}" class="button">Cancel</a>
             </div>
         </div>
