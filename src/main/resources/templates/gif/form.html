@@ -4,15 +4,22 @@
 <body>
 <div th:replace="layout :: nav"></div>
 <div th:replace="layout :: flash"></div>
+<!-- 3 spots to change to alter form.html to change between update and upload
+ 1. Upload h2 heading change from static text only to th:text="${heading}"
+ 2. In form element from action goes from "@{/gifs}" to "@{${action}}" to reflect what action
+ text is needed. and input type="hidden" th:field="*{id}"/> is added to distinguish gif id.
+ 3. the submit button text goes from static to th:text="${submit}" -->
 <div class="container upload">
+
     <div class="row">
         <div class="col s12">
-            <h2>Upload</h2>
+            <h2 th:text="${heading}">Upload</h2>
             <div class="subtitle">Upload and share your GIFs with friends and family on Facebook, Twitter, and everywhere else.</div>
         </div>
     </div>
     <div class="divider"></div>
-    <form th:action="@{/gifs}" method="post" th:object="${gif}"  enctype="multipart/form-data">
+    <form th:action="@{${action}}" method="post" th:object="${gif}"  enctype="multipart/form-data">
+        <input type="hidden" th:field="*{id}"/>
         <div class="row">
             <div class="col s12 l8">
                 <div class="file-wrapper">
@@ -40,7 +47,7 @@
         </div>
         <div class="row">
             <div class="col s12">
-                <button type="submit" class="button">Upload</button>
+                <button th:text="${submit}" type="submit" class="button">Upload</button>
                 <a href="javascript:window.location = document.referrer;" class="button">Cancel</a>
             </div>
         </div>

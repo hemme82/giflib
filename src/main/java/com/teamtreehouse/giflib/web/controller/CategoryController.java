@@ -57,7 +57,9 @@ public class CategoryController {
             model.addAttribute("category", new Category());
         }
         model.addAttribute("color", Color.values());
-
+        model.addAttribute("action", "/categories");
+        model.addAttribute("heading", "New Category");
+        model.addAttribute("submit", "Add");
         return "category/form";
     }
 
@@ -67,20 +69,39 @@ public class CategoryController {
         // TODO: Add model attributes needed for edit form
         //if model doesn't have attribute, then add attribute.
         if(!model.containsAttribute("category" )){
+            //this is different than formNewCategory, not new Category but findById passed into
+            // method.
             model.addAttribute("category", categoryService.findById(categoryId));
         }
         model.addAttribute("color", Color.values());
-
+        model.addAttribute("action", String.format("/categories/%s",categoryId));
+        model.addAttribute("heading", "Edit Category");
+        model.addAttribute("submit", "Update");
         return "category/form";
     }
 
     // Update an existing category
     @RequestMapping(value = "/categories/{categoryId}", method = RequestMethod.POST)
-    public String updateCategory() {
+    public String updateCategory(@Valid Category category, BindingResult result,
+                                 RedirectAttributes redirectAttributes) {
         // TODO: Update category if valid data was received
+        if (result.hasErrors()) {
+            //Include validation errors upon redirect
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult" +
+                    ".category", result);
+            //add category if invalid was received
+            redirectAttributes.addFlashAttribute("category", category);
 
+
+            //Redirect back to the form
+            return String.format("redirect:/categories/%s/edit",category.getId());
+        }
+        categoryService.save(category);
+
+        redirectAttributes.addFlashAttribute("flash", new FlashMessage("Category Successfully " +
+                "updated!", FlashMessage.Status.SUCCESS));
         // TODO: Redirect browser to /categories
-        return null;
+        return "redirect:/categories";
     }
 
     // Add a category
@@ -109,10 +130,22 @@ public class CategoryController {
 
     // Delete an existing category
     @RequestMapping(value = "/categories/{categoryId}/delete", method = RequestMethod.POST)
-    public String deleteCategory(@PathVariable Long categoryId) {
+    public String deleteCategory(@PathVariable Long categoryId,
+                                 RedirectAttributes redirectAttributes) {
+
+        Category cat = categoryService.findById(categoryId);
+
         // TODO: Delete category if it contains no GIFs
+        if(cat.getGifs().size() > 0){
+            redirectAttributes.addFlashAttribute("flash", new FlashMessage("Only empty categories" +
+                    " can be deleted.", FlashMessage.Status.FAILURE));
+            return String.format("redirect:/categories/%s/edit",categoryId);
+        }
+        categoryService.delete(cat);
+        redirectAttributes.addFlashAttribute("flash",
+                new FlashMessage("Category deleted.", FlashMessage.Status.SUCCESS));
 
         // TODO: Redirect browser to /categories
-        return null;
+        return "redirect:/categories";
     }
 }
